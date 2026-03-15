@@ -149,7 +149,7 @@ def compute_pnl(prices, usd_twd):
             "currency": cfg["currency"], "change_pct": p.get("change_pct", 0),
             "value_twd": val, "cost_twd": cost,
             "pnl_twd": pnl, "pnl_pct": pct, "day_delta_twd": day_d,
-            "monthly_buy": cfg["monthly_buy"],
+            "monthly_buy": cfg.get("monthly_buy", 0),
         })
     total_pnl = grand_value - grand_cost
     total_pct = (grand_value / grand_cost - 1) * 100 if grand_cost else 0

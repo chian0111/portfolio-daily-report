@@ -4,7 +4,12 @@
 # 執行方式：bash setup.sh
 # ─────────────────────────────────────────────
 
-set -e
+set -eo pipefail
+
+# ── 複製時忽略 identical 錯誤 ──
+cp_safe() {
+    cp "$1" "$2" 2>/dev/null || true
+}
 GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; NC='\033[0m'
 
 echo ""
@@ -33,7 +38,7 @@ echo ""
 echo "📁 複製程式到桌面..."
 DESKTOP="$HOME/Desktop"
 mkdir -p "$DESKTOP"
-cp portfolio_system.py "$DESKTOP/portfolio_system.py"
+cp_safe portfolio_system.py "$DESKTOP/portfolio_system.py"
 echo -e "${GREEN}✅ 程式已複製到 $DESKTOP${NC}"
 
 # ── 4. 引導填寫 config.json ──
@@ -189,3 +194,13 @@ echo "   台股格式：\"0050.TW\": {\"shares\": 100, \"cost_twd\": 130.0}"
 echo ""
 echo "手動執行：python3 ~/Desktop/portfolio_system.py"
 echo "══════════════════════════════════════"
+
+# ── 8. 自動開啟 portfolio.json 讓用戶填寫 ──
+echo ""
+echo -e "${YELLOW}📝 即將開啟 portfolio.json，請填入你的真實持倉後儲存。${NC}"
+echo "   （目前是範例資料，記得改成你自己的股票！）"
+echo ""
+sleep 2
+open -e "$DESKTOP/portfolio.json" 2>/dev/null || \
+open "$DESKTOP/portfolio.json" 2>/dev/null || \
+echo -e "${YELLOW}請手動開啟：~/Desktop/portfolio.json${NC}"
